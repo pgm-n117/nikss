@@ -19,7 +19,7 @@ class MyCustomTopo(Topo):
         Topo.__init__(self, **opts)
 
         switch = self.addSwitch('s1',
-                                bpf_path="simple_switch.o",
+                                bpf_path="simple_comp_switch.o",
                                 enable_tracing = True)
         for h in range(2):
             host = self.addHost('h%d' % (h + 1),
@@ -45,8 +45,8 @@ def main():
 
     s1 = net.get('s1')
     # Install table entries to forward traffic between hosts
-    s1.cmd("nikss-ctl table add pipe 0 ingress_tbl_fwd id 1 key {} data {}".format(h2.MAC(), socket.if_nametoindex("s1-eth3")))
-    s1.cmd("nikss-ctl table add pipe 0 ingress_tbl_fwd id 1 key {} data {}".format(h1.MAC(), socket.if_nametoindex("s1-eth2")))
+    s1.cmd("nikss-ctl table add pipe 0 ingress_tbl_fwd action id 1 key {} data {}".format(h2.MAC(), socket.if_nametoindex("s1-eth3")))
+    s1.cmd("nikss-ctl table add pipe 0 ingress_tbl_fwd action id 1 key {} data {}".format(h1.MAC(), socket.if_nametoindex("s1-eth2")))
 
     CLI( net )
     net.stop()
